@@ -4,6 +4,7 @@ import axios from "axios";
 import styled from "styled-components";
 import UserContext from "../../contexts/UserContext";
 
+import Header from "../Header";
 import { Swiper, SwiperSlide } from "swiper/react";
 
 // Import Swiper styles
@@ -53,7 +54,7 @@ export default function Home() {
 
   return (
     <>
-      <Header></Header>
+      <Header />
       <App>
         <Spotlight spotlightArray={spotlightArray} spotlight={spotlight}>
           <div className="main-spotlight"></div>
@@ -220,12 +221,6 @@ export default function Home() {
     </>
   );
 }
-
-const Header = styled.div`
-  height: 55px;
-  width: 100vw;
-  background-color: #32444d;
-`;
 
 const App = styled.div`
   display: flex;
