@@ -83,24 +83,28 @@ export default function Home() {
           <p className="discount-title">ON SALE</p>
           <Swiper
             breakpoints={{
-              500: {
+              300: {
                 slidesPerView: 1,
                 spaceBetween: 10,
                 slidesPerGroup: 1,
               },
-              600: {
+              400: {
                 slidesPerView: 2,
                 spaceBetween: 20,
                 slidesPerGroup: 2,
               },
-              800: {
+              700: {
                 slidesPerView: 3,
                 spaceBetween: 20,
                 slidesPerGroup: 3,
               },
-              1000: {
+              1200: {
                 slidesPerView: 4,
                 spaceBetween: 20,
+              },
+              1800: {
+                slidesPerView: 5,
+                spaceBetween: 10,
               },
             }}
             loop={false}
@@ -152,24 +156,28 @@ export default function Home() {
           <p className="topsell-title">Most Popular</p>
           <Swiper
             breakpoints={{
-              500: {
+              300: {
                 slidesPerView: 1,
                 spaceBetween: 10,
                 slidesPerGroup: 1,
               },
-              600: {
+              400: {
                 slidesPerView: 2,
                 spaceBetween: 20,
                 slidesPerGroup: 2,
               },
-              800: {
+              700: {
                 slidesPerView: 3,
                 spaceBetween: 20,
                 slidesPerGroup: 3,
               },
-              1000: {
+              1200: {
                 slidesPerView: 4,
                 spaceBetween: 20,
+              },
+              1800: {
+                slidesPerView: 5,
+                spaceBetween: 10,
               },
             }}
             loop={false}
@@ -225,7 +233,6 @@ export default function Home() {
 const App = styled.div`
   display: flex;
   flex-direction: column;
-  padding-top: 30px;
   margin-bottom: 30px;
 
   .swiper-container {
@@ -236,7 +243,7 @@ const App = styled.div`
   .swiper-slide {
     font-size: 18px;
     border-radius: 4px;
-    max-height: 575px;
+    max-height: 525px;
 
     /* Center slide text vertically */
     display: -webkit-box;
@@ -249,7 +256,7 @@ const App = styled.div`
   .swiper-slide img {
     display: block;
     height: calc((16 / 9) * ((80vw - 60px) / 4));
-    max-height: 460px;
+    max-height: 380px;
     width: 100%;
     object-fit: cover;
     cursor: pointer;
@@ -287,10 +294,41 @@ const App = styled.div`
   .price {
     text-decoration: none;
   }
+
+  @media (max-width: 1400px) {
+    .swiper-slide img {
+      max-height: 350px;
+    }
+  }
+
+  @media (max-width: 699px) {
+    .swiper-slide {
+      height: calc((16 / 9) * ((90vw - 20px) / 2) + 15px);
+      max-height: 450px;
+    }
+    .swiper-slide img {
+      height: calc((16 / 9) * ((90vw - 20px) / 2));
+    }
+  }
+
+  @media (max-width: 399px) {
+    .swiper-container {
+      width: 100%;
+      max-height: calc((16 / 9) * 90vw + 20px);
+    }
+    .swiper-slide {
+      height: calc((16 / 9) * 90vw);
+      max-height: calc((16 / 9) * 90vw);
+    }
+    .swiper-slide img {
+      height: calc((16 / 9) * 90vw);
+      max-height: calc((16 / 9) * 90vw);
+    }
+  }
 `;
 
 const Spotlight = styled.div`
-  margin: 25px auto 0px;
+  margin: 100px auto 0px;
   width: 75vw;
   max-width: 1600px;
   max-height: 900px;
@@ -318,28 +356,46 @@ const Spotlight = styled.div`
     cursor: pointer;
 
     img {
-      height: 68px;
-      width: 120px;
+      height: 90px;
+      width: 160px;
     }
     p {
-      margin-left: 10px;
       color: #ffffff;
       font-size: 18px;
+      white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      white-space: nowrap;
+      max-width: 180px;
     }
   }
   .option:hover {
     filter: brightness(1.2);
   }
 
+  @media (max-width: 1600px) {
+    .option {
+      img {
+        height: 79px;
+        width: 140px;
+      }
+    }
+  }
+
+  @media (max-width: 1300px) {
+    .option {
+      img {
+        height: 68px;
+        width: 120px;
+      }
+    }
+  }
+
   @media (max-width: 1000px) {
     .main-spotlight {
-      width: calc(100% - 180px);
+      width: calc(100% - 150px);
     }
     .spotlight-options {
-      width: 180px;
+      width: 150px;
     }
     .option {
       img {
@@ -348,6 +404,36 @@ const Spotlight = styled.div`
       }
       p {
         font-size: 14px;
+        max-width: 150px;
+      }
+    }
+  }
+  @media (max-width: 600px) {
+    flex-direction: column;
+    width: 90vw;
+
+    .main-spotlight {
+      width: 100%;
+      height: calc((9 / 16) * 90vw);
+    }
+    .spotlight-options {
+      display: flex;
+      justify-content: space-between;
+      width: 90vw;
+    }
+    .option {
+      justify-content: center;
+      align-items: center;
+      padding: 0px 5px;
+      height: 80px;
+      width: calc(90vw / 3);
+
+      p {
+        text-align: center;
+        margin: 5px 0px 0px;
+        width: calc(90vw / 3);
+      }
+      img {
       }
     }
   }
@@ -362,6 +448,13 @@ const Discount = styled.div`
     font-size: 36px;
     color: #ffffff;
   }
+  @media (max-width: 600px) {
+    width: 90vw;
+
+    .discount-title {
+      font-size: 28px;
+    }
+  }
 `;
 
 const TopSellers = styled.div`
@@ -372,5 +465,12 @@ const TopSellers = styled.div`
     margin-bottom: 20px;
     font-size: 36px;
     color: #ffffff;
+  }
+  @media (max-width: 600px) {
+    width: 90vw;
+
+    .topsell-title {
+      font-size: 28px;
+    }
   }
 `;
