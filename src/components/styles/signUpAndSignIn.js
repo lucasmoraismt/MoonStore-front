@@ -3,7 +3,7 @@ import styled from "styled-components";
 const Box=styled.div`
   background-color: #0F4C75;
   width: 50%;
-  height: 500px;
+  padding-bottom: 30px;
   border-radius: 8px;
   @media(max-width:600px){
     width: 70%;
@@ -49,6 +49,11 @@ const Form=styled.form`
     color:white;
     padding-left: 5px;
     font-size: 14px;
+
+  }
+  input:disabled{
+    pointer-events: none;
+    filter: brightness(0.8);
   }
 `
 const Button=styled.button`
@@ -64,6 +69,10 @@ const Button=styled.button`
   :hover{
     filter: brightness(1.15);
     cursor:pointer;
+  }
+  :disabled{
+    pointer-events: none;
+    filter: brightness(0.8);
   }
 `
 const Redirect=styled.p`

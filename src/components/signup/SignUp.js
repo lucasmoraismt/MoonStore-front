@@ -23,10 +23,10 @@ export default function SignUp() {
         const body={name,email,password,secPassword};
         try{
             await axios.post("http://localhost:4000/sign-up",body)
-            setDisabler(false)
             history.push('/login')
         }
         catch(err){
+            alert(err)
             setDisabler(false)
             console.log('err')
         }
@@ -36,11 +36,11 @@ export default function SignUp() {
     <Container>
       <Box>
         <Title>
-          <img src={Logo}/>
+          <img src={Logo} alt="Cervo"/>
           <p>MoonStore</p> 
         </Title>
         <Form onSubmit={signUp}>
-          <p>Name</p>
+          <p>Nickname</p>
           <input type='text' value={name} onChange={e => setName(e.target.value)}></input>
           <p>Email</p>
           <input type='email' value={email} onChange={e => setEmail(e.target.value)}></input>
