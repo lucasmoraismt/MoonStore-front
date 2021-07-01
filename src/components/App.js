@@ -10,11 +10,14 @@ import SignUp from "./signup/SignUp";
 import Home from "./home/Home";
 import Cart from "./cart/Cart";
 
+import GlobalStyle from "./styles/globalStyles"
+
 export default function App() {
   const [user, setUser] = useState(null);
 
   return (
     <UserContext.Provider value={{ user, setUser }}>
+      <GlobalStyle />
       <BrowserRouter>
         <Switch>
           <Route path="/login" exact component={Login}></Route>
