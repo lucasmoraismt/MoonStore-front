@@ -1,18 +1,17 @@
-import styled from "styled-components";
-import { CgTrashEmpty } from "react-icons/cg";
-export default function GameCart({ title, img, price, id, discount }) {
-  async function FinishPurchase() {
-    alert("vai comprar");
-  }
-  async function DeleteFromCart() {
-    alert("vai deletar");
-  }
-  return (
-    <Game>
-      <GameInfo>
-        <img src={img} />
-        <GameName>{title}</GameName>
-      </GameInfo>
+import styled from 'styled-components';
+import { CgTrashEmpty } from "react-icons/cg"
+export default function GameCart({title,img,price,id,discount,cartList,setCartList}) {
+      async function DeleteFromCart(){  
+        let newArray=[];
+        newArray=cartList.filter(item=>item.id!==id)
+        setCartList(newArray)
+      }
+    return(
+        <Game>
+        <GameInfo>
+          <img src={img}/>
+          <GameName>{title}</GameName>
+        </GameInfo>
 
       <PriceBox>
         {discount > 0 ? (

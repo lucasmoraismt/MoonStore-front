@@ -1,10 +1,11 @@
 import styled from "styled-components";
-import { Link } from "react-router-dom";
-import GameCart from "./GameCart";
-import { useContext, useEffect } from "react";
+import { CgTrashEmpty } from "react-icons/cg"
+import {Link,useHistory} from "react-router-dom"
+import GameCart from "./GameCart"
+import { useState,useEffect,useContext } from 'react';
 import UserContext from "../../contexts/UserContext";
-
-export default function Cart({ cartList, setCartList }) {
+import axios from "axios"
+export default function Cart({cartList,setCartList}) {
   const { user, setUser } = useContext(UserContext);
   useEffect(() => {
     if (localStorage.user && !user?.token) {
@@ -13,37 +14,81 @@ export default function Cart({ cartList, setCartList }) {
     }
   }, []);
 
-  async function FinishPurchase() {}
-  async function DeleteFromCart() {}
-  return (
+  const [total,setTotal]=useState(0);
+  let history = useHistory();
+
+  async function FinishPurchase(){
+    console.log(cartList)
+    
+    if(user){
+      let idList=[]
+      cartList.forEach(e=>{
+        idList.push(e.id)
+      })
+      const body={
+          userid:user.id,
+          gamesidlist:idList
+      }
+
+      const config = {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      };
+
+      console.log(body)
+
+      try{
+        await axios.post("http://localhost:4000/checkout",body,config);
+        history.push("/");
+        setCartList([])
+      }catch(e){
+          console.log(e);
+      }
+    }else{
+      alert('You have to sign in before');
+    };
+  }
+
+  function calcTotal() {
+    let value=0;
+    cartList.forEach(element => {
+      if(element.discount>0){
+        value+= ((element.price/100) * (1 - element.discount /100))
+      }else{
+        value+=element.price/100
+      }
+    });
+    setTotal(value.toFixed(2))
+  }
+  useEffect(calcTotal,[cartList]);
+
+  return(
+    <>
     <Container>
       <BoxCart>
-        {cartList.length > 0
-          ? cartList.map((e) => {
-              return (
-                <GameCart
-                  title={e.title}
-                  img={e.poster}
-                  price={e.price}
-                  id={e.id}
-                  discount={e.discount}
-                />
-              );
-            })
-          : "You have no items on your cart"}
-
-        <LowInfos>
-          <TotalValue>
+        {cartList.length>0?cartList.map((e)=>{
+          return <GameCart title={e.title} img={e.poster} price={e.price} id={e.id} discount={e.discount} cartList={cartList} setCartList={setCartList}/>
+        })
+        :<h4>Your cart is empty</h4>}
+       
+       <LowInfos>
+        <TotalValue>
             <p> Total</p>
-            <p> R$ 200.00</p>
-          </TotalValue>
-          <Link to="/">
-            <KeepBuying>Continue shopping</KeepBuying>
-          </Link>
-          <Finish onClick={FinishPurchase}>Checkout</Finish>
-        </LowInfos>
+            <p> R$ {total}</p>
+        </TotalValue>
+        <Link to="/">
+          <KeepBuying>
+            Continue shopping
+          </KeepBuying>
+        </Link>
+        <Finish onClick={FinishPurchase} disabled={!cartList.length>0}>
+          Checkout
+        </Finish>
+       </LowInfos>
       </BoxCart>
     </Container>
+    </>
   );
 }
 
@@ -77,7 +122,10 @@ const Finish = styled.button`
   position: absolute;
   bottom: 15px;
   right: 5%;
-`;
+  :disabled{
+    opacity: 0.5;
+  }
+`
 
 const KeepBuying = styled.button`
   cursor: pointer;
