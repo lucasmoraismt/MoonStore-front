@@ -1,39 +1,81 @@
 import Header from "../Header";
 import styled from "styled-components";
 import { CgTrashEmpty } from "react-icons/cg"
-import {Link} from "react-router-dom"
+import {Link,useHistory} from "react-router-dom"
 import GameCart from "./GameCart"
-
+import { useState,useEffect,useContext } from 'react';
+import UserContext from "../../contexts/UserContext";
+import axios from "axios"
 export default function Cart({cartList,setCartList}) {
+  const { user, setUser } = useContext(UserContext);
+  const [total,setTotal]=useState(0);
+  let history = useHistory();
+
   async function FinishPurchase(){
     console.log(cartList)
-    alert('vai comprar')
+    
+    if(user){
+      let idList=[]
+      cartList.forEach(e=>{
+        idList.push(e.id)
+      })
+      const body={
+          userid:user.userid,
+          gamesidlist:idList
+      }
+
+      const config = {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      };
+
+      console.log(body)
+
+      try{
+        await axios.post("http://localhost:4000/checkout",body,config);
+        history.push("/");
+      }catch(e){
+          console.log(e);
+      }
+    }else{
+      alert('You have to sign in before');
+    };
   }
-  async function DeleteFromCart(){
-    alert('vai deletar')
+
+  function calcTotal() {
+    let value=0;
+    cartList.forEach(element => {
+      if(element.discount>0){
+        value+= ((element.price/100) * (1 - element.discount /100))
+      }else{
+        value+=element.price/100
+      }
+    });
+    setTotal(value.toFixed(2))
   }
+  useEffect(calcTotal,[cartList])
   console.log(cartList)
   return(
     <>
-    <Header/>
     <Container>
       <BoxCart>
         {cartList.length>0?cartList.map((e)=>{
-          return <GameCart title={e.title} img={e.poster} price={e.price} id={e.id} discount={e.discount}/>
+          return <GameCart title={e.title} img={e.poster} price={e.price} id={e.id} discount={e.discount} cartList={cartList} setCartList={setCartList}/>
         })
-        :'You have no items on your cart'}
+        :<h4>Your cart is empty</h4>}
        
        <LowInfos>
         <TotalValue>
             <p> Total</p>
-            <p> R$ 200.00</p>
+            <p> R$ {total}</p>
         </TotalValue>
         <Link to="/">
           <KeepBuying>
             Continue shopping
           </KeepBuying>
         </Link>
-        <Finish onClick={FinishPurchase}>
+        <Finish onClick={FinishPurchase} disabled={!cartList.length>0}>
           Checkout
         </Finish>
        </LowInfos>
@@ -48,7 +90,12 @@ const BoxCart=styled.div`
   width: 60%;
   border-radius: 2px;
   padding-top: 10px;
-  
+  h4{
+    font-size: 20px;
+    text-align: center;
+    padding-bottom: 20px;
+    color: white;
+  }
 
 `
 const Container=styled.div`
@@ -59,88 +106,7 @@ const Container=styled.div`
   margin-top: 45px;
   padding-bottom: 30px;
 `
-const Game=styled.div`
-  width: 90%;
-  height: 85px;
-  background-color: #3282B8;
-  display: flex;
-  justify-content: space-between;
-  border-radius: 3px;
-  margin: 0 auto;
-  align-items: center;
-  margin-bottom: 10px;
-  img{
-    width: 64px;
-    height: 85px;
-    margin-right: 10px;
-  }
-  :hover{
-    filter: brightness(1.2);
-  }
 
-`
-const GameInfo=styled.div`
-  display: flex;
-  align-items: center;
-`
-const PriceBox=styled.div`
-  display: flex;
-  align-items: center;
-  margin-right: 8px;
-  .discount{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 20px;
-    width: 35px;
-    border-radius: 4px;
-    background-color: #0F4C75;
-    filter: brightness(1.15);
-    font-size: 10px;
-    color: white;
-    margin-right: 8px;
-  }
-  .original-price{
-    font-size: 10px;
-    color: white;
-    text-decoration: line-through;
-    opacity: 0.5;
-    margin-right: 8px;
-  }
-  .current-price{
-    font-size: 10px;
-    color: white;
-    margin-right: 8px;
-  }
-  .icon{
-    color:#BBE1FA;
-    margin-bottom: 3px;
-    cursor: pointer;
-    :hover{
-      color: #a12727;
-    }
-  }
-`
-const GameName=styled.p`
-  color: #BBE1FA;
-  font-size: 15px;
-  margin-right: 20px;
- 
-`
-const Discount=styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 20px;
-    width: 35px;
-    border-radius: 4px;
-    margin-right: 10px;
-    background-color: #0f4c75;
-    filter:brightness(1.2);
-    font-size: 10px;
-    color: white;
-  
-`
 const Finish=styled.button`
   background-color:#5bb356 ;
   border: none;
@@ -152,6 +118,9 @@ const Finish=styled.button`
   position: absolute;
   bottom: 15px;
   right: 5%;
+  :disabled{
+    opacity: 0.5;
+  }
 `
 
 const KeepBuying=styled.button`

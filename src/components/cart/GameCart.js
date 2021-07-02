@@ -1,11 +1,14 @@
 import styled from 'styled-components';
 import { CgTrashEmpty } from "react-icons/cg"
-export default function GameCart({title,img,price,id,discount}) {
+export default function GameCart({title,img,price,id,discount,cartList,setCartList}) {
     async function FinishPurchase(){
         alert('vai comprar')
       }
       async function DeleteFromCart(){
-        alert('vai deletar')
+        
+        let newArray=[];
+        newArray=cartList.filter(item=>item.id!==id)
+        setCartList(newArray)
       }
     return(
         <Game>
