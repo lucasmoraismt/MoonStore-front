@@ -26,6 +26,7 @@ export default function Header({ cartList }) {
     try {
       await axios.delete(`${process.env.REACT_APP_API_BASE_URL}logout`, config);
       setUser(null);
+      localStorage.clear();
     } catch (err) {
       console.log(err);
     }
