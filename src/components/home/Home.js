@@ -29,7 +29,7 @@ export default function Home({ cartList, setCartList }) {
   }, []);
 
   function getGames() {
-    const allGames = axios.get(`${process.env.REACT_APP_API_BASE_URL}/games`);
+    const allGames = axios.get(`${process.env.REACT_APP_API_BASE_URL}games`);
 
     allGames.then((response) => {
       setGames([...response.data]);
@@ -41,7 +41,7 @@ export default function Home({ cartList, setCartList }) {
     });
 
     const spotGames = axios.get(
-      `${process.env.REACT_APP_API_BASE_URL}/spotlight`
+      `${process.env.REACT_APP_API_BASE_URL}spotlight`
     );
 
     spotGames.then((response) => {
