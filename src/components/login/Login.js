@@ -1,4 +1,3 @@
-import styled from "styled-components";
 import Logo from "../assets/Logo.png";
 import {
   Redirect,
@@ -44,7 +43,6 @@ export default function Login() {
     } catch (err) {
       alert("Email or password incorrect.");
       setDisabler(false);
-      console.log("err");
     }
   }
   return (
