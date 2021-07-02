@@ -6,7 +6,7 @@ import { Link, useHistory } from "react-router-dom";
 import UserContext from "../contexts/UserContext";
 import { useContext } from "react";
 import axios from "axios";
-export default function Header() {
+export default function Header({cartList}) {
   const { user, setUser } = useContext(UserContext);
   console.log(user);
 
@@ -52,7 +52,7 @@ export default function Header() {
         <Link to="/cart">
           <CartBox>
             <RiShoppingCartLine className="icon" />
-            <p>0</p>
+            <p>{cartList?.length}</p>
           </CartBox>
         </Link>
         {user ? <RiLogoutBoxRLine className="icon" onClick={Logout} /> : ""}

@@ -25,11 +25,11 @@ export default function App() {
           <Route path="/login" exact component={Login}></Route>
           <Route path="/sign-up" exact component={SignUp}></Route>
           <Route path="/" exact>
-            <Header />
+            <Header cartList={cartList}/>
             <Home cartList={cartList} setCartList={setCartList} />
           </Route>
           <Route path="/cart" exact>
-            <Header />
+            <Header cartList={cartList}/>
             <Cart cartList={cartList} setCartList={setCartList} />
           </Route>
         </Switch>
