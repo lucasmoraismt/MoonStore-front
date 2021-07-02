@@ -10,10 +10,12 @@ import SignUp from "./signup/SignUp";
 import Home from "./home/Home";
 import Cart from "./cart/Cart";
 
-import GlobalStyle from "./styles/globalStyles"
+import GlobalStyle from "./styles/globalStyles";
+import Header from "./Header";
 
 export default function App() {
   const [user, setUser] = useState(null);
+  const [cartList, setCartList] = useState([]);
 
   return (
     <UserContext.Provider value={{ user, setUser }}>
@@ -22,8 +24,14 @@ export default function App() {
         <Switch>
           <Route path="/login" exact component={Login}></Route>
           <Route path="/sign-up" exact component={SignUp}></Route>
-          <Route path="/" exact component={Home}></Route>
-          <Route path="/cart" exact component={Cart}></Route>
+          <Route path="/" exact>
+            <Header />
+            <Home cartList={cartList} setCartList={setCartList} />
+          </Route>
+          <Route path="/cart" exact>
+            <Header />
+            <Cart cartList={cartList} setCartList={setCartList} />
+          </Route>
         </Switch>
       </BrowserRouter>
     </UserContext.Provider>
