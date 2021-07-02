@@ -40,7 +40,11 @@ export default function Cart({ cartList, setCartList }) {
       };
 
       try {
-        await axios.post("http://localhost:4000/checkout", body, config);
+        await axios.post(
+          `${process.env.REACT_APP_API_BASE_URL}/checkout`,
+          body,
+          config
+        );
         await openModal();
         setCartList([]);
       } catch (e) {

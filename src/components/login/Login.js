@@ -24,7 +24,10 @@ export default function Login() {
     setDisabler(true);
     const body = { email, password };
     try {
-      const response = await axios.post("http://localhost:4000/login", body);
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_BASE_URL}/login`,
+        body
+      );
       setUser({
         id: response.data.userid,
         name: response.data.username,

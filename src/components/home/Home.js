@@ -29,7 +29,7 @@ export default function Home({ cartList, setCartList }) {
   }, []);
 
   function getGames() {
-    const allGames = axios.get("http://localhost:4000/games");
+    const allGames = axios.get(`${process.env.REACT_APP_API_BASE_URL}/games`);
 
     allGames.then((response) => {
       setGames([...response.data]);
@@ -40,7 +40,9 @@ export default function Home({ cartList, setCartList }) {
       alert("Error when fetching data. Please reload page.");
     });
 
-    const spotGames = axios.get("http://localhost:4000/spotlight");
+    const spotGames = axios.get(
+      `${process.env.REACT_APP_API_BASE_URL}/spotlight`
+    );
 
     spotGames.then((response) => {
       setSpotlightArray([...response.data]);
