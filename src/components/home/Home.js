@@ -4,7 +4,7 @@ import axios from "axios";
 import styled from "styled-components";
 import UserContext from "../../contexts/UserContext";
 
-import Header from "../Header";
+import { FaCartPlus } from "react-icons/fa";
 import { Swiper, SwiperSlide } from "swiper/react";
 
 // Import Swiper styles
@@ -18,7 +18,7 @@ import SwiperCore, { Pagination, Navigation } from "swiper/core";
 // install Swiper modules
 SwiperCore.use([Pagination, Navigation]);
 
-export default function Home() {
+export default function Home({ cartList, setCartList }) {
   const [games, setGames] = useState(null);
   const [loading, setLoading] = useState(true);
   const [spotlightArray, setSpotlightArray] = useState([]);
@@ -52,181 +52,220 @@ export default function Home() {
     spotGames.catch((err) => console.log(err.response));
   }
 
+  function addToCart(e, game) {
+    e.stopPropagation();
+
+    if (cartList.includes(game)) {
+      return;
+    }
+
+    setCartList([...cartList, game]);
+  }
+
   return (
-    <>
-      <Header />
-      <App>
-        <Spotlight spotlightArray={spotlightArray} spotlight={spotlight}>
-          <div className="main-spotlight"></div>
-          <div className="spotlight-options">
-            {spotlightArray.length !== 0
-              ? spotlightArray.map((s, i) => {
-                  return (
-                    <div
-                      onClick={() => setSpotlight(spotlightArray[i])}
-                      className="option"
-                      key={i}
-                    >
-                      <img
-                        src={spotlightArray[i].spotlight}
-                        alt="Game picture"
-                      />
-                      <p>{spotlightArray[i].title}</p>
+    <App>
+      <Spotlight spotlightArray={spotlightArray} spotlight={spotlight}>
+        <div className="main-spotlight"></div>
+        <div className="spotlight-options">
+          {spotlightArray.length !== 0
+            ? spotlightArray.map((s, i) => {
+                return (
+                  <div
+                    onClick={() => setSpotlight(spotlightArray[i])}
+                    className="option"
+                    key={i}
+                  >
+                    <img src={spotlightArray[i].spotlight} alt="Game picture" />
+                    <p>{spotlightArray[i].title}</p>
+                  </div>
+                );
+              })
+            : ""}
+        </div>
+        <AddToCart onClick={(e) => addToCart(e, spotlight)}>
+          {spotlight?.discount > 0 ? (
+            <>
+              <span className="original-price">
+                {(spotlight?.price / 100).toFixed(2)}
+              </span>
+              <span className="price">
+                {(
+                  (spotlight?.price / 100) *
+                  (1 - spotlight?.discount / 100)
+                ).toFixed(2)}
+              </span>
+            </>
+          ) : (
+            <p className="price">{(spotlight?.price / 100).toFixed(2)}</p>
+          )}
+          <p className=""></p>
+          <button className="add-button">
+            {spotlight?.discount > 0 ? "Save Now" : "Buy Now"}
+          </button>
+        </AddToCart>
+      </Spotlight>
+
+      <Discount>
+        <p className="discount-title">ON SALE</p>
+        <Swiper
+          breakpoints={{
+            300: {
+              slidesPerView: 1,
+              spaceBetween: 10,
+              slidesPerGroup: 1,
+            },
+            400: {
+              slidesPerView: 2,
+              spaceBetween: 20,
+              slidesPerGroup: 2,
+            },
+            700: {
+              slidesPerView: 3,
+              spaceBetween: 20,
+              slidesPerGroup: 3,
+            },
+            1200: {
+              slidesPerView: 4,
+              spaceBetween: 20,
+            },
+            1800: {
+              slidesPerView: 5,
+              spaceBetween: 10,
+            },
+          }}
+          loop={false}
+          loopFillGroupWithBlank={false}
+          pagination={{
+            clickable: true,
+          }}
+          navigation={true}
+          className="mySwiper"
+        >
+          {loading
+            ? ""
+            : games.map((g, i) => {
+                if (g.discount === 0) {
+                  return;
+                }
+                return (
+                  <SwiperSlide key={i}>
+                    <div className="relative">
+                      <img src={g.poster} alt={`${g.title} poster`} />
+                      <QuickAdd
+                        onClick={(e) => AddToCart(e, g)}
+                        className="hover"
+                      >
+                        <FaCartPlus />
+                      </QuickAdd>
                     </div>
-                  );
-                })
-              : ""}
-          </div>
-        </Spotlight>
-
-        <Discount>
-          <p className="discount-title">ON SALE</p>
-          <Swiper
-            breakpoints={{
-              300: {
-                slidesPerView: 1,
-                spaceBetween: 10,
-                slidesPerGroup: 1,
-              },
-              400: {
-                slidesPerView: 2,
-                spaceBetween: 20,
-                slidesPerGroup: 2,
-              },
-              700: {
-                slidesPerView: 3,
-                spaceBetween: 20,
-                slidesPerGroup: 3,
-              },
-              1200: {
-                slidesPerView: 4,
-                spaceBetween: 20,
-              },
-              1800: {
-                slidesPerView: 5,
-                spaceBetween: 10,
-              },
-            }}
-            loop={false}
-            loopFillGroupWithBlank={false}
-            pagination={{
-              clickable: true,
-            }}
-            navigation={true}
-            className="mySwiper"
-          >
-            {loading
-              ? ""
-              : games.map((g, i) => {
-                  if (g.discount === 0) {
-                    return;
-                  }
-                  return (
-                    <SwiperSlide key={i}>
-                      <img src={g.poster} alt={`${g.title} poster`} />
-                      <p className="game-title">{g.title}</p>
-                      <div className="game-price">
-                        {g.discount > 0 ? (
-                          <div className="discount">
-                            <p>-{g.discount}%</p>
-                          </div>
-                        ) : (
-                          ""
-                        )}
-                        <span className="original-price">
-                          {(g.price / 100).toFixed(2)}
+                    <p className="game-title">{g.title}</p>
+                    <div className="game-price">
+                      {g.discount > 0 ? (
+                        <div className="discount">
+                          <p>-{g.discount}%</p>
+                        </div>
+                      ) : (
+                        ""
+                      )}
+                      <span className="original-price">
+                        {(g.price / 100).toFixed(2)}
+                      </span>
+                      {g.discount > 0 ? (
+                        <span className="current-price">
+                          {((g.price / 100) * (1 - g.discount / 100)).toFixed(
+                            2
+                          )}
                         </span>
-                        {g.discount > 0 ? (
-                          <span className="current-price">
-                            {((g.price / 100) * (1 - g.discount / 100)).toFixed(
-                              2
-                            )}
-                          </span>
-                        ) : (
-                          ""
-                        )}
-                      </div>
-                    </SwiperSlide>
-                  );
-                })}
-          </Swiper>
-        </Discount>
+                      ) : (
+                        ""
+                      )}
+                    </div>
+                  </SwiperSlide>
+                );
+              })}
+        </Swiper>
+      </Discount>
 
-        <TopSellers>
-          <p className="topsell-title">Most Popular</p>
-          <Swiper
-            breakpoints={{
-              300: {
-                slidesPerView: 1,
-                spaceBetween: 10,
-                slidesPerGroup: 1,
-              },
-              400: {
-                slidesPerView: 2,
-                spaceBetween: 20,
-                slidesPerGroup: 2,
-              },
-              700: {
-                slidesPerView: 3,
-                spaceBetween: 20,
-                slidesPerGroup: 3,
-              },
-              1200: {
-                slidesPerView: 4,
-                spaceBetween: 20,
-              },
-              1800: {
-                slidesPerView: 5,
-                spaceBetween: 10,
-              },
-            }}
-            loop={false}
-            loopFillGroupWithBlank={false}
-            pagination={{
-              clickable: true,
-            }}
-            navigation={true}
-            className="mySwiper"
-          >
-            {loading
-              ? ""
-              : games.map((g, i) => {
-                  return (
-                    <SwiperSlide key={i}>
+      <TopSellers>
+        <p className="topsell-title">Most Popular</p>
+        <Swiper
+          breakpoints={{
+            300: {
+              slidesPerView: 1,
+              spaceBetween: 10,
+              slidesPerGroup: 1,
+            },
+            400: {
+              slidesPerView: 2,
+              spaceBetween: 20,
+              slidesPerGroup: 2,
+            },
+            700: {
+              slidesPerView: 3,
+              spaceBetween: 20,
+              slidesPerGroup: 3,
+            },
+            1200: {
+              slidesPerView: 4,
+              spaceBetween: 20,
+            },
+            1800: {
+              slidesPerView: 5,
+              spaceBetween: 10,
+            },
+          }}
+          loop={false}
+          loopFillGroupWithBlank={false}
+          pagination={{
+            clickable: true,
+          }}
+          navigation={true}
+          className="mySwiper"
+        >
+          {loading
+            ? ""
+            : games.map((g, i) => {
+                return (
+                  <SwiperSlide key={i}>
+                    <div className="relative">
                       <img src={g.poster} alt={`${g.title} poster`} />
-                      <p className="game-title">{g.title}</p>
-                      <div className="game-price">
-                        {g.discount > 0 ? (
-                          <div className="discount">
-                            <p>-{g.discount}%</p>
-                          </div>
-                        ) : (
-                          ""
-                        )}
-                        <span
-                          className={
-                            g.discount > 0 ? "original-price" : "price"
-                          }
-                        >
-                          {(g.price / 100).toFixed(2)}
+                      <QuickAdd
+                        onClick={(e) => AddToCart(e, g)}
+                        className="hover"
+                      >
+                        <FaCartPlus />
+                      </QuickAdd>
+                    </div>
+                    <p className="game-title">{g.title}</p>
+                    <div className="game-price">
+                      {g.discount > 0 ? (
+                        <div className="discount">
+                          <p>-{g.discount}%</p>
+                        </div>
+                      ) : (
+                        ""
+                      )}
+                      <span
+                        className={g.discount > 0 ? "original-price" : "price"}
+                      >
+                        {(g.price / 100).toFixed(2)}
+                      </span>
+                      {g.discount > 0 ? (
+                        <span className="current-price">
+                          {((g.price / 100) * (1 - g.discount / 100)).toFixed(
+                            2
+                          )}
                         </span>
-                        {g.discount > 0 ? (
-                          <span className="current-price">
-                            {((g.price / 100) * (1 - g.discount / 100)).toFixed(
-                              2
-                            )}
-                          </span>
-                        ) : (
-                          ""
-                        )}
-                      </div>
-                    </SwiperSlide>
-                  );
-                })}
-          </Swiper>
-        </TopSellers>
-      </App>
-    </>
+                      ) : (
+                        ""
+                      )}
+                    </div>
+                  </SwiperSlide>
+                );
+              })}
+        </Swiper>
+      </TopSellers>
+    </App>
   );
 }
 
@@ -239,12 +278,10 @@ const App = styled.div`
     width: 100%;
     max-height: 575px;
   }
-
   .swiper-slide {
     font-size: 18px;
     border-radius: 4px;
     max-height: 525px;
-
     /* Center slide text vertically */
     display: -webkit-box;
     display: -ms-flexbox;
@@ -252,7 +289,6 @@ const App = styled.div`
     display: flex;
     flex-direction: column;
   }
-
   .swiper-slide img {
     display: block;
     height: calc((16 / 9) * ((80vw - 60px) / 4));
@@ -261,7 +297,9 @@ const App = styled.div`
     object-fit: cover;
     cursor: pointer;
   }
-
+  .relative {
+    position: relative;
+  }
   .game-title {
     overflow: hidden;
     text-overflow: ellipsis;
@@ -290,9 +328,17 @@ const App = styled.div`
   .original-price {
     margin-right: 10px;
     text-decoration: line-through;
+    color: #cccccc;
   }
   .price {
     text-decoration: none;
+  }
+  .swiper-slide:hover {
+    .hover {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
   }
 
   @media (max-width: 1400px) {
@@ -311,6 +357,16 @@ const App = styled.div`
     }
   }
 
+  @media (max-width: 599px) {
+    .swiper-slide {
+      height: calc((16 / 9) * ((90vw - 20px) / 2));
+      max-height: 475px;
+    }
+    .swiper-slide img {
+      height: calc((16 / 9) * ((90vw - 20px) / 2) - 75px);
+    }
+  }
+
   @media (max-width: 399px) {
     .swiper-container {
       width: 100%;
@@ -322,7 +378,7 @@ const App = styled.div`
     }
     .swiper-slide img {
       height: calc((16 / 9) * 90vw);
-      max-height: calc((16 / 9) * 90vw);
+      max-height: calc((16 / 9) * 90vw - 75px);
     }
   }
 `;
@@ -333,6 +389,7 @@ const Spotlight = styled.div`
   max-width: 1600px;
   max-height: 900px;
   display: flex;
+  position: relative;
 
   .main-spotlight {
     width: calc(100% - 200px);
@@ -433,9 +490,69 @@ const Spotlight = styled.div`
         margin: 5px 0px 0px;
         width: calc(90vw / 3);
       }
-      img {
-      }
     }
+  }
+`;
+
+const AddToCart = styled.div`
+  height: 80px;
+  width: 180px;
+  padding-top: 10px;
+  text-align: center;
+  border-radius: 3px;
+  background-color: rgba(128, 128, 128, 0.8);
+  position: absolute;
+  bottom: 25px;
+  left: 25px;
+  color: #ffffff;
+
+  .add-button {
+    background-color: #3282b8;
+    color: #ffffff;
+    font-size: 14px;
+    width: 140px;
+    height: 40px;
+    border-radius: 4px;
+    border: none;
+    margin-top: 5px;
+  }
+
+  @media (max-width: 699px) {
+    padding-top: 5px;
+    height: 60px;
+    width: 150px;
+
+    .add-button {
+      width: 100px;
+      height: 30px;
+    }
+  }
+  @media (max-width: 599px) {
+    bottom: 100px;
+    left: 20px;
+  }
+`;
+
+const QuickAdd = styled.div`
+  cursor: pointer;
+  position: absolute;
+  display: none;
+  background-color: rgba(27, 38, 44, 0.9);
+  color: #bbe1fa;
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  bottom: 20px;
+  right: 20px;
+  font-size: 24px;
+
+  @media (max-width: 399px) {
+    height: 60px;
+    width: 60px;
+    bottom: 10%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 `;
 
