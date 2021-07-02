@@ -2,10 +2,9 @@ import styled from "styled-components";
 import Logo from "./assets/Logo.png";
 import { IoPersonSharp } from "react-icons/io5";
 import { RiShoppingCartLine, RiLogoutBoxRLine } from "react-icons/ri";
-import { IoIosLogOut } from "react-icons/io";
 import { Link, useHistory } from "react-router-dom";
 import UserContext from "../contexts/UserContext";
-import { useContext, useReducer } from "react";
+import { useContext } from "react";
 import axios from "axios";
 export default function Header() {
   const { user, setUser } = useContext(UserContext);
@@ -150,10 +149,15 @@ const CartBox = styled.div`
   display: flex;
   position: relative;
   p {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background-color: red;
     right: 12.5px;
-    font-size: 10px;
+    font-size: 12px;
     padding: 0px 2px;
+    width: 15px;
+    height: 15px;
     max-width: 20px;
     border-radius: 50%;
     text-align: center;
