@@ -54,7 +54,7 @@ export default function Home({ cartList, setCartList }) {
 
   function addToCart(e, game) {
     e.stopPropagation();
-    console.log(cartList)
+
     if (cartList.includes(game)) {
       return;
     }
@@ -295,7 +295,6 @@ const App = styled.div`
     max-height: 380px;
     width: 100%;
     object-fit: cover;
-    cursor: pointer;
   }
   .relative {
     position: relative;
@@ -515,6 +514,7 @@ const AddToCart = styled.div`
     border-radius: 4px;
     border: none;
     margin-top: 5px;
+    cursor: pointer;
   }
 
   @media (max-width: 699px) {
