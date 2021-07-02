@@ -23,9 +23,6 @@ export default function Home({ cartList, setCartList }) {
   const [loading, setLoading] = useState(true);
   const [spotlightArray, setSpotlightArray] = useState([]);
   const [spotlight, setSpotlight] = useState(null);
-  const { user, setUser } = useContext(UserContext);
-
-  let history = useHistory();
 
   useEffect(() => {
     getGames();

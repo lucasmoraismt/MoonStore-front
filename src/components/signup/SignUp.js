@@ -1,4 +1,3 @@
-import styled from "styled-components";
 import Logo from "../assets/Logo.png";
 import { Link, useHistory } from "react-router-dom";
 import { useState } from "react";
@@ -34,7 +33,6 @@ export default function SignUp() {
     } catch (err) {
       alert(err);
       setDisabler(false);
-      console.log("err");
     }
   }
 
@@ -49,24 +47,28 @@ export default function SignUp() {
           <p>Nickname</p>
           <input
             type="text"
+            disabled={disabler}
             value={name}
             onChange={(e) => setName(e.target.value)}
           ></input>
           <p>Email</p>
           <input
             type="email"
+            disabled={disabler}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           ></input>
           <p>Password</p>
           <input
             type="password"
+            disabled={disabler}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           ></input>
           <p>Confirm password</p>
           <input
             type="password"
+            disabled={disabler}
             value={secPassword}
             onChange={(e) => setSecPassword(e.target.value)}
           ></input>

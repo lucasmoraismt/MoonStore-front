@@ -23,8 +23,6 @@ export default function Cart({ cartList, setCartList }) {
     setIsOpen(true);
   }
   async function FinishPurchase() {
-    console.log(cartList);
-
     if (user) {
       let idList = [];
       cartList.forEach((e) => {
@@ -40,8 +38,6 @@ export default function Cart({ cartList, setCartList }) {
           Authorization: `Bearer ${user.token}`,
         },
       };
-
-      console.log(body);
 
       try {
         await axios.post(

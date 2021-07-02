@@ -2,15 +2,13 @@ import styled from "styled-components";
 import Logo from "./assets/Logo.png";
 import { IoPersonSharp } from "react-icons/io5";
 import { RiShoppingCartLine, RiLogoutBoxRLine } from "react-icons/ri";
-import { Link, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import UserContext from "../contexts/UserContext";
 import { useContext, useEffect } from "react";
 import axios from "axios";
 
 export default function Header({ cartList }) {
   const { user, setUser } = useContext(UserContext);
-
-  console.log(user);
 
   useEffect(() => {
     if (localStorage.user && !user?.token) {
