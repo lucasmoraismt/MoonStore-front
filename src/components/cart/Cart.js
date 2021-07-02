@@ -41,7 +41,7 @@ export default function Cart({ cartList, setCartList }) {
 
       try {
         await axios.post(
-          `${process.env.REACT_APP_API_BASE_URL}/checkout`,
+          `${process.env.REACT_APP_API_BASE_URL}checkout`,
           body,
           config
         );

@@ -28,7 +28,7 @@ export default function SignUp() {
     }
     const body = { name, email, password, secPassword };
     try {
-      await axios.post(`${process.env.REACT_APP_API_BASE_URL}/sign-up`, body);
+      await axios.post(`${process.env.REACT_APP_API_BASE_URL}sign-up`, body);
       history.push("/login");
     } catch (err) {
       alert(err);

@@ -25,7 +25,7 @@ export default function Login() {
     const body = { email, password };
     try {
       const response = await axios.post(
-        `${process.env.REACT_APP_API_BASE_URL}/login`,
+        `${process.env.REACT_APP_API_BASE_URL}login`,
         body
       );
       setUser({
