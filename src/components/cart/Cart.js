@@ -1,12 +1,12 @@
 import styled from "styled-components";
-import { CgTrashEmpty } from "react-icons/cg"
-import {Link,useHistory} from "react-router-dom"
-import GameCart from "./GameCart"
-import { useState,useEffect,useContext } from 'react';
+import { CgTrashEmpty } from "react-icons/cg";
+import { Link, useHistory } from "react-router-dom";
+import GameCart from "./GameCart";
+import { useState, useEffect, useContext } from "react";
 import UserContext from "../../contexts/UserContext";
-import axios from "axios"
-import AfterPurchaseModal from "./AfterPurchaseModal"
-export default function Cart({cartList,setCartList}) {
+import axios from "axios";
+import AfterPurchaseModal from "./AfterPurchaseModal";
+export default function Cart({ cartList, setCartList }) {
   const { user, setUser } = useContext(UserContext);
   const [modalIsOpen, setIsOpen] = useState(false);
   useEffect(() => {
@@ -16,24 +16,24 @@ export default function Cart({cartList,setCartList}) {
     }
   }, []);
 
-  const [total,setTotal]=useState(0);
+  const [total, setTotal] = useState(0);
   let history = useHistory();
 
-  function openModal(){
-    setIsOpen(true)
+  function openModal() {
+    setIsOpen(true);
   }
-  async function FinishPurchase(){
-    console.log(cartList)
-    
-    if(user){
-      let idList=[]
-      cartList.forEach(e=>{
-        idList.push(e.id)
-      })
-      const body={
-          userid:user.id,
-          gamesidlist:idList
-      }
+  async function FinishPurchase() {
+    console.log(cartList);
+
+    if (user) {
+      let idList = [];
+      cartList.forEach((e) => {
+        idList.push(e.id);
+      });
+      const body = {
+        userid: user.id,
+        gamesidlist: idList,
+      };
 
       const config = {
         headers: {
@@ -41,61 +41,82 @@ export default function Cart({cartList,setCartList}) {
         },
       };
 
-      console.log(body)
+      console.log(body);
 
-      try{
-        await axios.post("http://localhost:4000/checkout",body,config);
-         await openModal();
+      try {
+        await axios.post(
+          `${process.env.REACT_APP_API_BASE_URL}/checkout`,
+          body,
+          config
+        );
+        await openModal();
         setCartList([]);
-        
-      }catch(e){
-          console.log(e);
+      } catch (e) {
+        console.log(e);
       }
-    }else{
-      alert('You have to sign in before');
-    };
+    } else {
+      alert("You have to sign in before");
+    }
   }
 
   function calcTotal() {
-    let value=0;
-    cartList.forEach(element => {
-      if(element.discount>0){
-        value+= ((element.price/100) * (1 - element.discount /100))
-      }else{
-        value+=element.price/100
+    let value = 0;
+    cartList.forEach((element) => {
+      if (element.discount > 0) {
+        value += (element.price / 100) * (1 - element.discount / 100);
+      } else {
+        value += element.price / 100;
       }
     });
-    setTotal(value.toFixed(2))
+    setTotal(value.toFixed(2));
   }
-  useEffect(calcTotal,[cartList]);
+  useEffect(calcTotal, [cartList]);
 
-  return(
+  return (
     <>
-    <Container>
-      <BoxCart>
-        {cartList.length>0?cartList.map((e)=>{
-          return <GameCart title={e.title} img={e.poster} price={e.price} id={e.id} discount={e.discount} cartList={cartList} setCartList={setCartList}/>
-        })
-        :<h4>Your cart is empty</h4>}
-       
-       <LowInfos>
-        <TotalValue>
-            <p> Total</p>
-            <p> R$ {total}</p>
-        </TotalValue>
-        <Link to="/">
-          <KeepBuying>
-            Continue shopping
-          </KeepBuying>
-        </Link>
-        <Finish onClick={FinishPurchase} disabled={!cartList.length>0}>
-          Checkout
-        </Finish>
-        
-        {modalIsOpen?<AfterPurchaseModal modalIsOpen={modalIsOpen} setIsOpen={setIsOpen}/>:''}
-       </LowInfos>
-      </BoxCart>
-    </Container>
+      <Container>
+        <BoxCart>
+          {cartList.length > 0 ? (
+            cartList.map((e) => {
+              return (
+                <GameCart
+                  title={e.title}
+                  img={e.poster}
+                  price={e.price}
+                  id={e.id}
+                  discount={e.discount}
+                  cartList={cartList}
+                  setCartList={setCartList}
+                />
+              );
+            })
+          ) : (
+            <h4>Your cart is empty</h4>
+          )}
+
+          <LowInfos>
+            <TotalValue>
+              <p> Total</p>
+              <p> R$ {total}</p>
+            </TotalValue>
+            <Link to="/">
+              <KeepBuying>Continue shopping</KeepBuying>
+            </Link>
+            <Finish onClick={FinishPurchase} disabled={!cartList.length > 0}>
+              Checkout
+            </Finish>
+
+            {modalIsOpen ? (
+              <AfterPurchaseModal
+                modalIsOpen={modalIsOpen}
+                setIsOpen={setIsOpen}
+              />
+            ) : (
+              ""
+            )}
+          </LowInfos>
+        </BoxCart>
+      </Container>
     </>
   );
 }
@@ -105,7 +126,7 @@ const BoxCart = styled.div`
   width: 800px;
   border-radius: 2px;
   padding: 25px 0px 15px;
-  h4{
+  h4 {
     text-align: center;
     font-size: 20px;
     color: white;
@@ -136,10 +157,10 @@ const Finish = styled.button`
   position: absolute;
   bottom: 15px;
   right: 5%;
-  :disabled{
+  :disabled {
     opacity: 0.5;
   }
-`
+`;
 
 const KeepBuying = styled.button`
   cursor: pointer;
