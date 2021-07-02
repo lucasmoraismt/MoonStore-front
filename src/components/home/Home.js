@@ -54,7 +54,7 @@ export default function Home({ cartList, setCartList }) {
 
   function addToCart(e, game) {
     e.stopPropagation();
-    console.log(cartList)
+
     if (cartList.includes(game)) {
       return;
     }
