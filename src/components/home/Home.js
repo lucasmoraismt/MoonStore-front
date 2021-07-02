@@ -51,6 +51,7 @@ export default function Home({ cartList, setCartList }) {
     spotGames.catch((err) => console.log(err.response));
   }
 
+  //addiciona
   function addToCart(e, game) {
     e.stopPropagation();
 
