@@ -5,8 +5,10 @@ import GameCart from "./GameCart"
 import { useState,useEffect,useContext } from 'react';
 import UserContext from "../../contexts/UserContext";
 import axios from "axios"
+import AfterPurchaseModal from "./AfterPurchaseModal"
 export default function Cart({cartList,setCartList}) {
   const { user, setUser } = useContext(UserContext);
+  const [modalIsOpen, setIsOpen] = useState(false);
   useEffect(() => {
     if (localStorage.user && !user?.token) {
       const userStorage = JSON.parse(localStorage.user);
@@ -17,6 +19,9 @@ export default function Cart({cartList,setCartList}) {
   const [total,setTotal]=useState(0);
   let history = useHistory();
 
+  function openModal(){
+    setIsOpen(true)
+  }
   async function FinishPurchase(){
     console.log(cartList)
     
@@ -40,8 +45,9 @@ export default function Cart({cartList,setCartList}) {
 
       try{
         await axios.post("http://localhost:4000/checkout",body,config);
-        history.push("/");
-        setCartList([])
+         await openModal();
+        setCartList([]);
+        
       }catch(e){
           console.log(e);
       }
@@ -85,6 +91,8 @@ export default function Cart({cartList,setCartList}) {
         <Finish onClick={FinishPurchase} disabled={!cartList.length>0}>
           Checkout
         </Finish>
+        
+        {modalIsOpen?<AfterPurchaseModal modalIsOpen={modalIsOpen} setIsOpen={setIsOpen}/>:''}
        </LowInfos>
       </BoxCart>
     </Container>
@@ -97,6 +105,12 @@ const BoxCart = styled.div`
   width: 800px;
   border-radius: 2px;
   padding: 25px 0px 15px;
+  h4{
+    text-align: center;
+    font-size: 20px;
+    color: white;
+    margin-bottom: 10px;
+  }
 `;
 const Container = styled.div`
   height: calc(100vh - 60px);
