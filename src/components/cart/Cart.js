@@ -1,4 +1,3 @@
-import Header from "../Header";
 import styled from "styled-components";
 import { CgTrashEmpty } from "react-icons/cg"
 import {Link,useHistory} from "react-router-dom"
@@ -8,6 +7,13 @@ import UserContext from "../../contexts/UserContext";
 import axios from "axios"
 export default function Cart({cartList,setCartList}) {
   const { user, setUser } = useContext(UserContext);
+  useEffect(() => {
+    if (localStorage.user && !user?.token) {
+      const userStorage = JSON.parse(localStorage.user);
+      setUser(userStorage);
+    }
+  }, []);
+
   const [total,setTotal]=useState(0);
   let history = useHistory();
 
@@ -20,7 +26,7 @@ export default function Cart({cartList,setCartList}) {
         idList.push(e.id)
       })
       const body={
-          userid:user.userid,
+          userid:user.id,
           gamesidlist:idList
       }
 
@@ -35,6 +41,7 @@ export default function Cart({cartList,setCartList}) {
       try{
         await axios.post("http://localhost:4000/checkout",body,config);
         history.push("/");
+        setCartList([])
       }catch(e){
           console.log(e);
       }
@@ -54,8 +61,8 @@ export default function Cart({cartList,setCartList}) {
     });
     setTotal(value.toFixed(2))
   }
-  useEffect(calcTotal,[cartList])
-  console.log(cartList)
+  useEffect(calcTotal,[cartList]);
+
   return(
     <>
     <Container>
@@ -82,39 +89,36 @@ export default function Cart({cartList,setCartList}) {
       </BoxCart>
     </Container>
     </>
-  )
+  );
 }
 
-const BoxCart=styled.div`
-  background-color: #0F4C75;
-  width: 60%;
+const BoxCart = styled.div`
+  background-color: #0f4c75;
+  width: 800px;
   border-radius: 2px;
-  padding-top: 10px;
-  h4{
-    font-size: 20px;
-    text-align: center;
-    padding-bottom: 20px;
-    color: white;
-  }
-
-`
-const Container=styled.div`
-  height: 100vh;
+  padding: 25px 0px 15px;
+`;
+const Container = styled.div`
+  height: calc(100vh - 60px);
+  margin-top: 60px;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 45px;
-  padding-bottom: 30px;
-`
+  padding: 0px 20px 40px;
 
-const Finish=styled.button`
-  background-color:#5bb356 ;
+  @media (max-width: 400px) {
+    padding: 0px 20px;
+  }
+`;
+const Finish = styled.button`
+  background-color: #5bb356;
   border: none;
   cursor: pointer;
-  color: #1B262C;
+  color: #1b262c;
   border-radius: 3px;
   font-size: 12px;
-  height: 25px;
+  height: 30px;
+  width: 80px;
   position: absolute;
   bottom: 15px;
   right: 5%;
@@ -123,31 +127,31 @@ const Finish=styled.button`
   }
 `
 
-const KeepBuying=styled.button`
+const KeepBuying = styled.button`
   cursor: pointer;
-  background-color: #1B262C;
+  background-color: #1b262c;
   border: none;
-  color: #BBE1FA;
+  color: #bbe1fa;
   border-radius: 3px;
   font-size: 12px;
-  height: 25px;
+  height: 30px;
+  width: 140px;
   position: absolute;
   bottom: 15px;
-  right: calc(5% + 80px);
-`
-const TotalValue=styled.div`
-  font-size: 13px;
+  right: calc(5% + 100px);
+`;
+const TotalValue = styled.div`
+  font-size: 14px;
   display: flex;
   color: white;
   justify-content: space-between;
   width: 90%;
   margin: 0 auto;
   position: absolute;
-  bottom:50px;
+  bottom: 50px;
   right: 5%;
-`
-const LowInfos=styled.div`
+`;
+const LowInfos = styled.div`
   position: relative;
   height: 70px;
-
-`
+`;

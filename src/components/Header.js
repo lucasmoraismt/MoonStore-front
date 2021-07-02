@@ -4,11 +4,20 @@ import { IoPersonSharp } from "react-icons/io5";
 import { RiShoppingCartLine, RiLogoutBoxRLine } from "react-icons/ri";
 import { Link, useHistory } from "react-router-dom";
 import UserContext from "../contexts/UserContext";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import axios from "axios";
-export default function Header({cartList}) {
+
+export default function Header({ cartList }) {
   const { user, setUser } = useContext(UserContext);
+
   console.log(user);
+
+  useEffect(() => {
+    if (localStorage.user && !user?.token) {
+      const userStorage = JSON.parse(localStorage.user);
+      setUser(userStorage);
+    }
+  }, []);
 
   async function Logout() {
     const config = {
@@ -36,7 +45,7 @@ export default function Header({cartList}) {
           <UserBox enabled={user}>
             <IoPersonSharp className="icon" />
             <p className="username">
-              {user.username.charAt(0).toUpperCase() + user.username.slice(1)}
+              {user?.name?.charAt(0).toUpperCase() + user?.name?.slice(1)}
             </p>
             <div />
           </UserBox>
