@@ -54,7 +54,7 @@ export default function Home({ cartList, setCartList }) {
 
   function addToCart(e, game) {
     e.stopPropagation();
-
+    console.log(cartList)
     if (cartList.includes(game)) {
       return;
     }
@@ -152,7 +152,7 @@ export default function Home({ cartList, setCartList }) {
                     <div className="relative">
                       <img src={g.poster} alt={`${g.title} poster`} />
                       <QuickAdd
-                        onClick={(e) => AddToCart(e, g)}
+                        onClick={(e) => addToCart(e, g)}
                         className="hover"
                       >
                         <FaCartPlus />
@@ -230,7 +230,7 @@ export default function Home({ cartList, setCartList }) {
                     <div className="relative">
                       <img src={g.poster} alt={`${g.title} poster`} />
                       <QuickAdd
-                        onClick={(e) => AddToCart(e, g)}
+                        onClick={(e) => addToCart(e, g)}
                         className="hover"
                       >
                         <FaCartPlus />

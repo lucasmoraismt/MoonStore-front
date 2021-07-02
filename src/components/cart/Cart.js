@@ -2,36 +2,26 @@ import Header from "../Header";
 import styled from "styled-components";
 import { CgTrashEmpty } from "react-icons/cg"
 import {Link} from "react-router-dom"
+import GameCart from "./GameCart"
 
-export default function Cart() {
+export default function Cart({cartList,setCartList}) {
   async function FinishPurchase(){
+    console.log(cartList)
     alert('vai comprar')
   }
   async function DeleteFromCart(){
     alert('vai deletar')
   }
-
+  console.log(cartList)
   return(
     <>
     <Header/>
     <Container>
       <BoxCart>
-       <Game>
-        <GameInfo>
-          <img src="https://cdn1.epicgames.com/9773aa1aa54f4f7b80e44bef04986cea/offer/EGS_RocketLeague_PsyonixLLC_S2-1200x1600-94b99fd67ae08c9d640f2d228991ae19.jpg?h=854&resize=1&w=640"/>
-          <GameName>Rocket League</GameName>
-        </GameInfo>
-
-        <PriceBox>
-          <div className="discount">
-            <p>-30%</p>
-          </div>
-          <span className="original-price"> R$ 290.00</span>
-          <span className="current-price">R$ 200.00</span>
-          <CgTrashEmpty className="icon" onClick={DeleteFromCart}/>
-        </PriceBox>
-       </Game>
-       
+        {cartList.length>0?cartList.map((e)=>{
+          return <GameCart title={e.title} img={e.poster} price={e.price} id={e.id} discount={e.discount}/>
+        })
+        :'You have no items on your cart'}
        
        <LowInfos>
         <TotalValue>
